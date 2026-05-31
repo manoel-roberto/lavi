@@ -1,0 +1,21 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Lavi local data (contém banco de dados, downloads de mídias e cookies dos bots)
+data/
+dados_instagram_volume/
+.env
+
+# Ambientes virtuais
+.venv/
+venv/
+ENV/
+
+# Sistema operacional e IDEs
+.DS_Store
+.vscode/
+.idea/
+*.log

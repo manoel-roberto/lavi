@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavi</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos Customizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+    
+    <!-- TELA DE LOGIN -->
+    <div id="login-container" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fa-solid fa-shield-halved brand-icon"></i>
+                <h1>Lavi OSINT</h1>
+                <p>Insira suas credenciais administrativas</p>
+            </div>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="username"><i class="fa-solid fa-user"></i> Usuário</label>
+                    <input type="text" id="username" required placeholder="admin">
+                </div>
+                <div class="input-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Senha</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Acessar Painel</button>
+            </form>
+            <div id="login-error" class="error-msg hidden"></div>
+        </div>
+    </div>
+
+    <!-- TELA DE ALTERAÇÃO DE SENHA OBRIGATÓRIA -->
+    <div id="password-change-container" class="auth-wrapper hidden">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fa-solid fa-key brand-icon alert-color"></i>
+                <h1>Alterar Senha</h1>
+                <p>Por segurança, altere sua senha inicial padrão para continuar.</p>
+            </div>
+            <form id="password-change-form">
+                <div class="input-group">
+                    <label for="old-password">Senha Atual</label>
+                    <input type="password" id="old-password" required placeholder="admin_lavi_2026">
+                </div>
+                <div class="input-group">
+                    <label for="new-password">Nova Senha</label>
+                    <input type="password" id="new-password" required placeholder="Mínimo 8 caracteres">
+                </div>
+                <button type="submit" class="btn-primary">Salvar Nova Senha</button>
+            </form>
+            <div id="password-change-error" class="error-msg hidden"></div>
+        </div>
+    </div>
+
+    <!-- TELA PRINCIPAL (DASHBOARD) -->
+    <div id="app-container" class="app-layout hidden">
+        
+        <!-- Sidebar Esquerda -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-microchip logo-icon"></i>
+                <h2>Lavi Panel</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard-tab"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                <a href="#" class="nav-item" data-tab="bots-tab"><i class="fa-solid fa-robot"></i> Contas Bot</a>
+                <a href="#" class="nav-item" data-tab="targets-tab"><i class="fa-solid fa-users-viewfinder"></i> Alvos Monitorados</a>
+                <a href="#" class="nav-item" data-tab="search-tab"><i class="fa-solid fa-magnifying-glass"></i> Busca Indexada (FTS)</a>
+                <a href="#" class="nav-item" data-tab="logs-tab"><i class="fa-solid fa-terminal"></i> Terminal de Logs</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fa-solid fa-circle-user avatar-icon"></i>
+                    <span id="current-admin-user">admin</span>
+                </div>
+                <button id="btn-logout" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </aside>
+
+        <!-- Área de Conteúdo Principal -->
+        <main class="content-area">
+            
+            <!-- ABA: DASHBOARD -->
+            <section id="dashboard-tab" class="tab-content">
+                <header class="content-header">
+                    <h1>Visão Geral</h1>
+                    <p>Acompanhamento operacional do sistema de escuta social</p>
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-robot"></i></div>
+                        <div class="stat-info">
+                            <h3>Bots Ativos</h3>
+                            <p id="stat-bots-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+                        <div class="stat-info">
+                            <h3>Alvos Monitorados</h3>
+                            <p id="stat-targets-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-database"></i></div>
+                        <div class="stat-info">
+                            <h3>Posts Coletados</h3>
+                            <p id="stat-posts-count">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-details">
+                    <div class="card">
+                        <h2>Fluxo Sequencial das Tarefas</h2>
+                        <p>O agendador roda tarefas horárias para Stories e diárias na madrugada para Feed. O motor opera no formato FIFO sequencial a partir de uma única conexão de rede local para evitar banimentos de IP.</p>
+                        <div class="status-indicator">
+                            <span class="pulse-green"></span> Agendador em Execução em Background
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA: BOTS -->
+            <section id="bots-tab" class="tab-content hidden">
+                <header class="content-header">
+                    <h1>Gerenciamento de Bots</h1>
+                    <p>Contas utilizadas para autenticação e coleta de dados públicos</p>
+                </header>
+                
+                <div class="grid-layout">
+                    <div class="card">
+                        <h2>Autenticar Novo Bot</h2>
+                        <form id="bot-create-form">
+                            <div class="input-group">
+                                <label for="bot-username">Username do Instagram</label>
+                                <input type="text" id="bot-username" required placeholder="ex: seu_bot_osint">
+                            </div>
+                            <div class="input-group">
+                                <label for="bot-password">Senha do Instagram (Não será salva)</label>
+                                <input type="password" id="bot-password" required placeholder="Digite a senha">
+                            </div>
+                            <button type="submit" class="btn-primary" id="btn-submit-bot">Iniciar Login Interativo</button>
+                        </form>
+                        <div id="bot-action-feedback" class="feedback-box hidden"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Bots Cadastrados</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Bot (Username)</th>
+                                        <th>Status</th>
+                                        <th>Último Uso</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bots-list-body">
+                                    <!-- Preenchido dinamicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA: TARGETS -->
+            <section id="targets-tab" class="tab-content hidden">
+                <header class="content-header">
+                    <h1>Alvos Monitorados</h1>
+                    <p>Contas de artistas e concorrentes sob monitoramento automatizado</p>
+                </header>
+
+                <div class="grid-layout">
+                    <div class="card">
+                        <h2>Adicionar Novo Alvo</h2>
+                        <form id="target-create-form">
+                            <div class="input-group">
+                                <label for="target-username">Username do Alvo (@)</label>
+                                <input type="text" id="target-username" required placeholder="ex: concorrente_oficial">
+                            </div>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="target-feed" checked> Baixar Feed/Reels</label>
+                                <label><input type="checkbox" id="target-stories" checked> Baixar Stories</label>
+                                <label><input type="checkbox" id="target-comments"> Coletar Comentários</label>
+                            </div>
+                            <div class="input-group">
+                                <label for="target-freq">Frequência de Varredura do Feed</label>
+                                <select id="target-freq">
+                                    <option value="24" selected>Diária (24h)</option>
+                                    <option value="12">12 horas</option>
+                                    <option value="6">6 horas</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Cadastrar Alvo</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h2>Lista de Alvos</h2>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Perfil</th>
+                                        <th>Frequência</th>
+                                        <th>Última Coleta</th>
+                                        <th>Opções</th>
+                                        <th>Ações Rápidas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="targets-list-body">
+                                    <!-- Preenchido dinamicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA: SEARCH -->
+            <section id="search-tab" class="tab-content hidden">
+                <header class="content-header">
+                    <h1>Busca Avançada (FTS5)</h1>
+                    <p>Pesquisa indexada instantânea por palavras-chave em legendas e comentários</p>
+                </header>
+                <div class="card search-box-wrapper">
+                    <div class="search-input-container">
+                        <input type="text" id="search-input" placeholder="Pesquisar legendas, produtos, artistas...">
+                        <button id="btn-search" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+                    </div>
+                </div>
+
+                <div id="search-results-container" class="results-grid">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+            </section>
+
+            <!-- ABA: LOGS -->
+            <section id="logs-tab" class="tab-content hidden">
+                <header class="content-header">
+                    <h1>Terminal de Logs</h1>
+                    <p>Histórico operacional detalhado da fila e eventos do scraper em tempo real</p>
+                </header>
+                <div class="card terminal-card">
+                    <div class="terminal-header">
+                        <span><i class="fa-solid fa-square-poll-horizontal"></i> crawler.log</span>
+                        <button id="btn-refresh-logs" class="btn-icon" title="Atualizar Logs"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+                    </div>
+                    <div class="terminal-body">
+                        <pre id="terminal-output">Carregando logs operacionais...</pre>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL DE VISUALIZAÇÃO DE POST DETALHADO -->
+    <div id="post-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body-layout">
+                <div class="modal-media-pane" id="modal-media-container">
+                    <!-- Renderização dinâmica da imagem ou vídeo -->
+                </div>
+                <div class="modal-info-pane">
+                    <h2 id="modal-target-username">@perfil</h2>
+                    <span id="modal-post-date" class="date-tag">30/05/2026</span>
+                    <hr>
+                    <h3>Legenda</h3>
+                    <p id="modal-post-caption" class="scrollable-text"></p>
+                    <hr>
+                    <h3>Comentários Coletados</h3>
+                    <p id="modal-post-comments" class="scrollable-text italic-text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

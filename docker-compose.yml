@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  lavi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lavi_app
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mapeia a pasta física local no host para o volume persistente dentro do container
+      - ./data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/storage.db
+      - DOWNLOAD_DIR=/app/data/downloads
+      - SESSION_DIR=/app/data/sessions
+      - LOG_FILE_PATH=/app/data/crawler.log
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin_lavi_2026
+      - SECRET_KEY=minha_chave_secreta_padrao_lavi_2026_jwt
+    security_opt:
+      - no-new-privileges:true

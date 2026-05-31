@@ -89,3 +89,67 @@ CREATE VIRTUAL TABLE posts_fts USING fts5(
 ```
 
 * **Triggers de inserção e exclusão**: Atualizam a tabela virtual `posts_fts` em tempo real toda vez que um registro de post ou alvo é inserido ou removido.
+
+---
+
+## 🚀 Deploy em Produção (VPS ByteHosting)
+
+Esta seção descreve os passos práticos para implantar o Lavi em um servidor VPS Linux na ByteHosting (ou outro provedor Ubuntu de sua preferência) com segurança criptográfica (SSH), firewall ativo e SSL automatizado pelo Caddy.
+
+### Passo 1: Configuração Local (Na sua máquina local)
+
+1. **Torne o script executável e rode-o**:
+   ```bash
+   chmod +x local_setup_ssh.sh
+   ./local_setup_ssh.sh
+   ```
+2. **Adicione a chave SSH**:
+   * Copie o conteúdo da chave pública exibida no terminal (gerada em `~/.ssh/id_lavi_vps.pub`).
+   * Adicione esta chave no painel da **ByteHosting** antes de instanciar a VPS.
+3. **Configure o atalho**:
+   * Edite seu arquivo local em `~/.ssh/config` e substitua o placeholder `<DIGITE_O_IP_DA_SUA_VPS_AQUI>` pelo IP público real da sua VPS.
+
+---
+
+### Passo 2: Provisionamento da VPS
+
+1. **Acesse a VPS remotamente** usando o atalho criado:
+   ```bash
+   ssh lavi-vps
+   ```
+2. **Clone o repositório da aplicação na VPS**:
+   ```bash
+   git clone https://github.com/manoel-roberto/lavi.git /app/lavi
+   cd /app/lavi
+   ```
+3. **Execute o playbook de provisionamento e hardening**:
+   ```bash
+   sudo chmod +x server_deploy_setup.sh
+   sudo ./server_deploy_setup.sh
+   ```
+   * *O que este script executa automaticamente:*
+     * Atualização do sistema e instalação do SQLite3, Git e utilitários.
+     * Instalação oficial estável do Docker Engine e Compose V2.
+     * Ativação do Firewall UFW com **rate-limiting na porta SSH (22)** para mitigar ataques de brute-force e liberação de portas web (`80`/`443`).
+     * Criação de volumes e atribuição de permissões em `/var/lib/lavi/`.
+     * Registro do Cron Job diário (executado às 02:00 AM) para backups compactados com 7 dias de retenção.
+
+---
+
+### Passo 3: Inicialização em Produção
+
+1. **Prepare as variáveis de ambiente**:
+   ```bash
+   cp .env.example .env
+   nano .env
+   ```
+   * *Configurações obrigatórias:*
+     * **`DOMAIN_NAME`**: Preencha com o seu domínio real (ex: `lavi.seu-dominio.com`) apontado para o IP da VPS. O Caddy usará este domínio para obter e renovar o certificado SSL Let's Encrypt de forma automática.
+     * **`ADMIN_PASSWORD`** e **`SECRET_KEY`**: Insira chaves fortes e únicas.
+2. **Suba o ecossistema Docker**:
+   ```bash
+   docker compose -f docker-compose.prod.yml up --build -d
+   ```
+3. **Acesse via HTTPS**:
+   Acesse no seu navegador: `https://lavi.seu-dominio.com` (ou domínio correspondente). O Caddy garantirá HTTPS nativo com compressão ativa.
+

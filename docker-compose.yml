@@ -6,7 +6,7 @@ services:
     container_name: lavi_app
     restart: always
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
       # Mapeia a pasta física local no host para o volume persistente dentro do container
       - ./data:/app/data

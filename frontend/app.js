@@ -199,6 +199,8 @@ function switchTab(tabId) {
         loadBots();
     } else if (tabId === "targets-tab") {
         loadTargets();
+    } else if (tabId === "posts-tab") {
+        loadPostsTab();
     } else if (tabId === "logs-tab") {
         loadLogs();
     }
@@ -411,6 +413,81 @@ async function scrapeTargetManual(id, type) {
         alert(res.message);
     } catch (e) {
         alert(e.message);
+    }
+}
+
+// --------------------------------------------------
+// ABA: Dados Coletados
+// --------------------------------------------------
+const btnFilterPosts = document.getElementById("btn-filter-posts");
+const filterPostTarget = document.getElementById("filter-post-target");
+const filterPostType = document.getElementById("filter-post-type");
+const postsListContainer = document.getElementById("posts-list-container");
+
+if (btnFilterPosts) {
+    btnFilterPosts.addEventListener("click", loadPostsTab);
+}
+
+async function loadPostsTab() {
+    if (!postsListContainer) return;
+    postsListContainer.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--text-secondary);">Carregando dados coletados...</p>`;
+    
+    try {
+        // Carrega alvos para o filtro se o dropdown estiver vazio (exceto opção "Todos")
+        if (filterPostTarget && filterPostTarget.options.length <= 1) {
+            const targets = await apiRequest("/api/targets");
+            filterPostTarget.innerHTML = '<option value="">Todos os Alvos</option>';
+            targets.forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t.id;
+                opt.textContent = `@${t.username}`;
+                filterPostTarget.appendChild(opt);
+            });
+        }
+
+        // Constrói query params
+        const targetId = filterPostTarget ? filterPostTarget.value : "";
+        const postType = filterPostType ? filterPostType.value : "";
+        
+        let url = "/api/posts?limit=50";
+        if (targetId) url += `&target_id=${targetId}`;
+        if (postType) url += `&post_type=${postType}`;
+        
+        const posts = await apiRequest(url);
+        postsListContainer.innerHTML = "";
+        
+        if (posts.length === 0) {
+            postsListContainer.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--text-secondary);">Nenhum post ou mídia coletada encontrada com estes filtros.</p>`;
+            return;
+        }
+        
+        posts.forEach(post => {
+            const card = document.createElement("div");
+            card.className = "result-card";
+            
+            const relativeMediaSrc = post.local_path.replace("data/downloads/", "/media/");
+            const mediaTypeIcon = post.post_type === "VIDEO" ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-image"></i>';
+            const dateStr = new Date(post.taken_at).toLocaleDateString("pt-BR");
+            
+            card.innerHTML = `
+                <div class="result-media-preview">
+                    ${post.post_type === 'VIDEO' 
+                        ? `<video src="${relativeMediaSrc}" muted></video>` 
+                        : `<img src="${relativeMediaSrc}" alt="Mídia">`}
+                    <div class="media-type-badge">${mediaTypeIcon} ${post.post_type}</div>
+                </div>
+                <div class="result-info">
+                    <div class="result-author">@${post.target_username}</div>
+                    <div class="result-date">${dateStr}</div>
+                    <div class="result-caption">${post.caption || 'Sem legenda.'}</div>
+                </div>
+            `;
+            
+            card.addEventListener("click", () => openPostModal(post, relativeMediaSrc));
+            postsListContainer.appendChild(card);
+        });
+    } catch (e) {
+        postsListContainer.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color:var(--danger);">Falha ao carregar dados coletados: ${e.message}</p>`;
     }
 }
 

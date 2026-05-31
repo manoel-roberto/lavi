@@ -14,6 +14,7 @@ from app.api.bots import router as bots_router
 from app.api.targets import router as targets_router
 from app.api.search import router as search_router
 from app.api.logs import router as logs_router
+from app.api.posts import router as posts_router
 
 app = FastAPI(
     title="Lavi API",
@@ -36,6 +37,8 @@ app.include_router(bots_router)
 app.include_router(targets_router)
 app.include_router(search_router)
 app.include_router(logs_router)
+app.include_router(posts_router)
+
 
 def setup_admin_user():
     """

@@ -74,6 +74,7 @@
                 <a href="#" class="nav-item active" data-tab="dashboard-tab"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
                 <a href="#" class="nav-item" data-tab="bots-tab"><i class="fa-solid fa-robot"></i> Contas Bot</a>
                 <a href="#" class="nav-item" data-tab="targets-tab"><i class="fa-solid fa-users-viewfinder"></i> Alvos Monitorados</a>
+                <a href="#" class="nav-item" data-tab="posts-tab"><i class="fa-solid fa-photo-film"></i> Dados Coletados</a>
                 <a href="#" class="nav-item" data-tab="search-tab"><i class="fa-solid fa-magnifying-glass"></i> Busca Indexada (FTS)</a>
                 <a href="#" class="nav-item" data-tab="logs-tab"><i class="fa-solid fa-terminal"></i> Terminal de Logs</a>
             </nav>
@@ -279,6 +280,40 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- ABA: DADOS COLETADOS -->
+            <section id="posts-tab" class="tab-content hidden">
+                <header class="content-header">
+                    <h1>Dados Coletados</h1>
+                    <p>Galeria completa de imagens, vídeos e postagens extraídas de perfis monitorados</p>
+                </header>
+                
+                <div class="card filter-box-wrapper" style="margin-bottom: 25px;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <div class="input-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                            <label for="filter-post-target" style="margin-bottom: 6px;">Filtrar por Alvo</label>
+                            <select id="filter-post-target" style="padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); width: 100%;">
+                                <option value="">Todos os Alvos</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                            <label for="filter-post-type" style="margin-bottom: 6px;">Tipo de Mídia</label>
+                            <select id="filter-post-type" style="padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); width: 100%;">
+                                <option value="">Todos os Tipos</option>
+                                <option value="IMAGE">Imagens</option>
+                                <option value="VIDEO">Vídeos / Reels</option>
+                            </select>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <button id="btn-filter-posts" class="btn-primary" style="height: 44px; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-filter"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="posts-list-container" class="results-grid">
+                    <!-- Preenchido dinamicamente -->
                 </div>
             </section>
 

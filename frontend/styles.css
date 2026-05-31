@@ -782,3 +782,133 @@ tr:hover td {
     70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
+
+/* --------------------------------------------------
+   Estilos do Tutorial / Onboarding (Premium Design)
+   -------------------------------------------------- */
+.tutorial-hero-card {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(17, 24, 39, 0.7) 100%);
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    margin-bottom: 30px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.hero-icon {
+    font-size: 42px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.4));
+    flex-shrink: 0;
+}
+
+.hero-content h2 {
+    border-bottom: none;
+    margin-bottom: 8px;
+    padding-bottom: 0;
+    font-size: 22px;
+}
+
+.hero-content p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.tutorial-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 35px;
+}
+
+.step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.step-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(14, 165, 233, 0.25);
+    box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.5);
+}
+
+.step-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.step-icon {
+    font-size: 20px;
+}
+
+.step-icon.accent-color {
+    color: var(--accent);
+}
+
+.step-icon.target-color {
+    color: var(--warning);
+}
+
+.step-icon.search-color {
+    color: var(--success);
+}
+
+.step-icon.log-color {
+    color: #a855f7;
+}
+
+.step-header h3 {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.step-card p {
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    flex-grow: 1;
+}
+
+.step-note {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    background-color: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    display: block;
+}
+
+.step-note i {
+    margin-right: 4px;
+}
+

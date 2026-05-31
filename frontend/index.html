@@ -119,6 +119,60 @@
                     </div>
                 </div>
                 <div class="dashboard-details">
+                    <!-- CARD PRINCIPAL DE INSTRUÇÕES -->
+                    <div class="card tutorial-hero-card">
+                        <div class="hero-content">
+                            <i class="fa-solid fa-wand-magic-sparkles hero-icon"></i>
+                            <div>
+                                <h2>Bem-vindo ao Lavi! 🚀</h2>
+                                <p>Sua plataforma inteligente de Escuta Social (Social Listening) local. O Lavi monitora perfis públicos autorizados do Instagram automaticamente e cria um índice de pesquisa textual avançada a partir do conteúdo coletado de forma incremental.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASSOS DO FLUXO DE MONITORAMENTO -->
+                    <div class="tutorial-steps-grid">
+                        <div class="step-card">
+                            <div class="step-badge">Passo 1</div>
+                            <div class="step-header">
+                                <i class="fa-solid fa-robot step-icon accent-color"></i>
+                                <h3>Autenticar Contas Bot</h3>
+                            </div>
+                            <p>Acesse a aba <strong>Contas Bot</strong> e adicione uma conta secundária do Instagram. O sistema iniciará uma conexão segura via navegador Playwright Stealth em background para realizar o login interativo.</p>
+                            <span class="step-note"><i class="fa-solid fa-shield-halved"></i> <strong>Segurança:</strong> Suas senhas nunca são armazenadas no banco. Salvamos apenas os cookies de sessão segura localmente.</span>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-badge">Passo 2</div>
+                            <div class="step-header">
+                                <i class="fa-solid fa-users-viewfinder step-icon target-color"></i>
+                                <h3>Cadastrar Perfis Alvos</h3>
+                            </div>
+                            <p>Na aba <strong>Alvos Monitorados</strong>, informe o username (@) do perfil que deseja monitorar. Escolha a frequência de coleta (diária, 12h ou 6h) e o tipo de mídia que deseja extrair (Stories, Feed, Comentários).</p>
+                            <span class="step-note"><i class="fa-solid fa-history"></i> A coleta de stories roda a cada 1 hora. A de Feed roda diariamente para poupar recursos.</span>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-badge">Passo 3</div>
+                            <div class="step-header">
+                                <i class="fa-solid fa-magnifying-glass step-icon search-color"></i>
+                                <h3>Pesquisar Termos e Insights</h3>
+                            </div>
+                            <p>Na aba <strong>Busca Indexada (FTS)</strong>, pesquise por menções de marcas, produtos ou palavras-chave nas legendas e comentários coletados de todos os alvos. A busca utiliza tecnologia FTS5 do SQLite local.</p>
+                            <span class="step-note"><i class="fa-solid fa-photo-film"></i> Clique nos cards de resultados de busca para visualizar imagens, reproduzir vídeos e ler os comentários indexados.</span>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-badge">Passo 4</div>
+                            <div class="step-header">
+                                <i class="fa-solid fa-terminal step-icon log-color"></i>
+                                <h3>Monitorar Logs do Sistema</h3>
+                            </div>
+                            <p>Na aba <strong>Terminal de Logs</strong>, você consegue ver o log síncrono em tempo real das coletas automáticas e as atividades em background executadas pelo agendador de tarefas.</p>
+                            <span class="step-note"><i class="fa-solid fa-clock"></i> O agendador roda tarefas em fila FIFO única para simular navegação humana natural.</span>
+                        </div>
+                    </div>
+
                     <div class="card">
                         <h2>Fluxo Sequencial das Tarefas</h2>
                         <p>O agendador roda tarefas horárias para Stories e diárias na madrugada para Feed. O motor opera no formato FIFO sequencial a partir de uma única conexão de rede local para evitar banimentos de IP.</p>

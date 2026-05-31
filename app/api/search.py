@@ -5,8 +5,7 @@ from app.api.auth import get_current_admin
 
 router = APIRouter(prefix="/api/search", tags=["search"])
 
-class SearchResultResponse(Optional[dict]):
-    pass
+# Não herdar de Optional[dict] para evitar TypeError no carregamento do Python
 
 @router.get("")
 def search_posts(q: str, current_user: str = Depends(get_current_admin)):

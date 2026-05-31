@@ -94,20 +94,45 @@ CREATE VIRTUAL TABLE posts_fts USING fts5(
 
 ## 🚀 Deploy em Produção (VPS ByteHosting)
 
-Esta seção descreve os passos práticos para implantar o Lavi em um servidor VPS Linux na ByteHosting (ou outro provedor Ubuntu de sua preferência) com segurança criptográfica (SSH), firewall ativo e SSL automatizado pelo Caddy.
+Esta seção descreve os passos práticos para contratar a VPS, configurar a segurança do servidor no painel, preparar a sua máquina e implantar o Lavi com segurança criptográfica (SSH), firewall ativo e SSL automatizado pelo Caddy.
+
+### 💳 Guia de Contratação e Configuração da VPS (ByteHosting)
+
+Siga o passo a passo sequencial abaixo para adquirir e preparar o servidor de menor custo financeiro:
+
+1. **Criação de Conta no Painel:**
+   * Acesse o site oficial do provedor em [https://bytehosting.cloud/](https://bytehosting.cloud/) e crie sua conta administrativa.
+2. **Seleção do Plano e Localização:**
+   * No menu do painel, clique em **Deploy Server** (ou Criar Servidor) e selecione a categoria **Budget VPS** ou **Linux VPS**.
+   * Escolha a localização de menor tarifa disponível (geralmente servidores na **Europa/Alemanha** ou **Estados Unidos** são os mais baratos). A latência de rede não afeta a engine assíncrona de coletas do Lavi.
+3. **Dimensionamento de Hardware Mínimo Obrigatório:**
+   * Escolha o plano de entrada contendo no mínimo **1 vCPU e 1 GB de RAM**.
+   * > [!CAUTION]
+     > **Aviso Importante de Hardware:** Nunca utilize servidores com menos de 1 GB de RAM (como instâncias de 512 MB). O motor de coleta do Lavi instancia navegadores Chromium headless via Playwright para realizar a raspagem segura de dados. O Chromium exige picos de memória que acionará o mecanismo OOM (Out Of Memory) do kernel Linux se a VPS possuir menos de 1 GB de RAM, resultando no desligamento automático do container Docker.
+4. **Seleção do Sistema Operacional (OS):**
+   * Escolha estritamente o **Ubuntu 22.04 LTS** ou **Ubuntu 24.04 LTS (x86_64 / AMD64)**. Evite distribuições baseadas em ARM (como instâncias Ampere) ou minimalistas (como Alpine) devido à dificuldade de rodar os pacotes nativos do Chromium.
+5. **Configuração de Chaves SSH no Painel:**
+   * Antes de finalizar a criação do servidor, localize a seção **SSH Keys** no painel do ByteHosting.
+   * Clique em **Add SSH Key**.
+   * Abra em sua máquina local o script de automação SSH (detalhado no Passo 1 abaixo) para gerar suas chaves. Copie o conteúdo do arquivo público gerado em `~/.ssh/id_lavi_vps.pub` e cole no campo de texto do painel.
+   * Dê um nome amigável (ex: `Lavi-Key`) e conclua.
+   * **Observação:** Desative a opção de autenticação por senha tradicional para garantir imunidade contra ataques de dicionário e brute-force.
+6. **Finalização:**
+   * Conclua a criação da VPS. Aguarde cerca de 1 a 2 minutos até que o status mude para *Active* e copie o **IP Público** exibido na tela.
+
+---
 
 ### Passo 1: Configuração Local (Na sua máquina local)
 
-1. **Torne o script executável e rode-o**:
+1. **Torne o script executável e rode-o para gerar a chave SSH**:
    ```bash
    chmod +x local_setup_ssh.sh
    ./local_setup_ssh.sh
    ```
-2. **Adicione a chave SSH**:
-   * Copie o conteúdo da chave pública exibida no terminal (gerada em `~/.ssh/id_lavi_vps.pub`).
-   * Adicione esta chave no painel da **ByteHosting** antes de instanciar a VPS.
-3. **Configure o atalho**:
-   * Edite seu arquivo local em `~/.ssh/config` e substitua o placeholder `<DIGITE_O_IP_DA_SUA_VPS_AQUI>` pelo IP público real da sua VPS.
+2. **Configure o IP na sua máquina local**:
+   * O script gerará a chave que você colou no painel da ByteHosting no passo anterior.
+   * Edite o arquivo criado em `~/.ssh/config` na sua máquina e substitua o placeholder `<DIGITE_O_IP_DA_SUA_VPS_AQUI>` pelo IP público real da VPS que você copiou do painel.
+
 
 ---
 

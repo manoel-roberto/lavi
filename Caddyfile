@@ -1,0 +1,30 @@
+# ==============================================================================
+# CONFIGURAÇÃO DO CADDY PROXY REVERSO - LAVI
+# ==============================================================================
+# Este arquivo configura o Caddy para resolver o SSL Let's Encrypt de forma automática
+# e realizar o encaminhamento de requisições de forma segura e otimizada para o Lavi.
+
+{$DOMAIN_NAME} {
+    # Proxy reverso direcionado ao container interno do Lavi na rede do Docker Compose
+    reverse_proxy app:8000
+
+    # Configurações globais de cabeçalhos de segurança em produção
+    header {
+        # Evita renderização em iframes de domínios não confiáveis (clickjacking)
+        X-Frame-Options "DENY"
+        # Força o navegador a respeitar os tipos de mídia definidos (previne MIME-sniffing)
+        X-Content-Type-Options "nosniff"
+        # Ativa o filtro de cross-site scripting (XSS) no navegador
+        X-XSS-Protection "1; mode=block"
+        # Habilita Strict Transport Security (HSTS) para forçar HTTPS vitalício no domínio
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    }
+
+    # Ativa compressão nativa de ativos para otimizar velocidade de carregamento
+    encode gzip zstd
+
+    # Limita tamanho máximo de uploads no painel (evita flood)
+    limits {
+        max_body_size 50mb
+    }
+}

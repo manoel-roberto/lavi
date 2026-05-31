@@ -1,0 +1,65 @@
+# ==============================================================================
+# ORQUESTRADOR DOCKER COMPOSE DE PRODUÇÃO - LAVI
+# ==============================================================================
+# Este arquivo configura o ecossistema do Lavi para rodar de forma isolada,
+# utilizando o Caddy como proxy de borda com SSL gratuito e volumes locais do host VPS.
+
+services:
+  # Serviço principal da aplicação (API FastAPI + Frontend SPA + Worker Scheduler)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lavi_app_prod
+    restart: always
+    # As portas não são expostas publicamente para garantir que todo tráfego
+    # passe obrigatoriamente pela camada de segurança SSL do Caddy.
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_PATH=${DATABASE_PATH:-/app/data/storage.db}
+      - DOWNLOAD_DIR=${DOWNLOAD_DIR:-/app/data/downloads}
+      - SESSION_DIR=${SESSION_DIR:-/app/data/sessions}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      # Mapeia as pastas físicas de produção criadas pelo script no host VPS
+      - /var/lib/lavi/data:/app/data
+      - /var/lib/lavi/downloads:/app/data/downloads
+      - /var/lib/lavi/sessions:/app/data/sessions
+    networks:
+      - lavi_net
+
+  # Serviço Caddy Proxy Reverso (SSL automático Let's Encrypt / HTTP/2)
+  caddy:
+    image: caddy:2-alpine
+    container_name: lavi_caddy_prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    volumes:
+      # Mapeia as configurações do Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      # Persiste certificados SSL para evitar banimento nos limites da Let's Encrypt
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - lavi_net
+
+# Definição de volumes internos do Caddy para cache de chaves SSL
+volumes:
+  caddy_data:
+  caddy_config:
+
+# Rede interna isolada
+networks:
+  lavi_net:
+    driver: bridge

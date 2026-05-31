@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 
 from playwright.sync_api import sync_playwright, BrowserContext, Page
-from playwright_stealth import stealth_sync
+from playwright_stealth import stealth
 
 from app.config import SESSION_DIR, DOWNLOAD_DIR
 from app.db import execute_write, execute_query
@@ -79,7 +79,7 @@ class InstagramScraper:
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
             )
             page = context.new_page()
-            stealth_sync(page)
+            stealth(page)
 
             try:
                 page.goto("https://www.instagram.com/accounts/login/")
@@ -161,7 +161,7 @@ class InstagramScraper:
                     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
                 )
                 page = context.new_page()
-                stealth_sync(page)
+                stealth(page)
 
                 # Acessa os stories do alvo
                 page.goto(f"https://www.instagram.com/stories/{target_username}/")
@@ -263,7 +263,7 @@ class InstagramScraper:
                     user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
                 )
                 page = context.new_page()
-                stealth_sync(page)
+                stealth(page)
 
                 # Navega para o perfil do alvo
                 page.goto(f"https://www.instagram.com/{target_username}/")
